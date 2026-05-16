@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<schema name="analyzed-string-test" version="1.6">
+
+  <uniqueKey>id</uniqueKey>
+
+  <field name="id"        type="string"    indexed="true" stored="true"/>
+  <field name="title"     type="string"    indexed="true" stored="true"/>
+  <!-- required by UpdateLog / DirectUpdateHandler2 -->
+  <field name="_version_" type="plong"     indexed="true" stored="false"/>
+
+  <!--
+    The analysis chain that does the real normalization work.
+    Uses KeywordTokenizer so the whole value is one token,
+    then normalizes: fold, strip leading article, collapse punctuation.
+  -->
+  <fieldType name="browse_key_analysis" class="solr.TextField" positionIncrementGap="10000">
+    <analyzer>
+      <tokenizer class="solr.KeywordTokenizerFactory"/>
+      <filter class="solr.LowerCaseFilterFactory"/>
+      <filter class="solr.ASCIIFoldingFilterFactory"/>
+      <!-- strip leading "the " -->
+      <filter class="solr.PatternReplaceFilterFactory"
+              pattern="^the\s+" replacement="" replace="first"/>
+      <!-- collapse hyphens/colons to space -->
+      <filter class="solr.PatternReplaceFilterFactory"
+              pattern="[:\-]+" replacement=" " replace="all"/>
+      <!-- strip remaining punctuation -->
+      <filter class="solr.PatternReplaceFilterFactory"
+              pattern="[^\p{L}\p{N}\s]" replacement="" replace="all"/>
+      <filter class="solr.TrimFilterFactory"/>
+    </analyzer>
+  </fieldType>
+
+  <!--
+    AnalyzedString: runs values through browse_key_analysis at
+    index time and stores/indexes the result as a plain string.
+    Range queries compare pre-normalized values directly.
+  -->
+  <fieldType name="browse_key"
+             class="com.billdueber.solr.schema.AnalyzedString"
+             fieldType="browse_key_analysis"/>
+
+  <field name="author_browse" type="browse_key" indexed="true" stored="true"/>
+
+  <!-- plain string for baseline comparison -->
+  <fieldType name="string" class="solr.StrField" sortMissingLast="true"/>
+  <fieldType name="plong"  class="solr.LongPointField" docValues="true"/>
+
+</schema>
