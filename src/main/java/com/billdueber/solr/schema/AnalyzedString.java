@@ -15,7 +15,7 @@ public class AnalyzedString extends StrField {
   IndexSchema schema;
   private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-  protected void init(IndexSchema s, Map<String, String> args) throws SolrException {
+  protected void init(IndexSchema s, Map<String, String> args) {
     schema = s;
     super.init(schema, args);
     fieldType = args.remove("fieldType");
