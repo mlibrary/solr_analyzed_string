@@ -1,3 +1,13 @@
+-----
+
+# DEPRECATED
+
+This code doesn't work with anything past Solr 8, and won't be receiving any update. Still works fine, though.
+
+For Solr 9+ users: The new code is at https://github.com/mlibrary/umich-lib-solr-extensions
+
+-----
+
 # solr_analyzed_string -- fill a solr string based on a textField definition
 
 There's a real advantage to doing data munging within the solr process, 
