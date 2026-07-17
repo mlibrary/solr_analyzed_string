@@ -1,10 +1,8 @@
 -----
 
-# DEPRECATED
+# Archived
 
-This code doesn't work with anything past Solr 8, and won't be receiving any update. Still works fine, though.
-
-For Solr 9+ users: The new code is at https://github.com/mlibrary/umich-lib-solr-extensions
+This code has been folded into https://github.com/mlibrary/umich-lib-solr-extensions
 
 -----
 
